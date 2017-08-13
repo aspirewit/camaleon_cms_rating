@@ -1,0 +1,19 @@
+<div>
+  <% ratings = post.ratings %>
+  <% count = ratings.count %>
+  <% average = ratings.average(:score).to_f.round(2) %>
+
+  <div class="read-only-rating" data-score="<%== average %>"></div>
+
+  <p><%= "#{average} average based on #{count} ratings." %></p>
+
+  <% groups = ratings.order(:score).group(:score).count %>
+  <% 5.downto(1) do |score| %>
+    <div>
+      <span><%= "#{score} Star" %></span>
+      <span class="read-only-rating" data-score="<%== score %>"></span>
+      <% percentage = count.nonzero? ? Array(groups.assoc(score)).second.to_i.fdiv(count) * 100 : 0 %>
+      <%= number_to_percentage(percentage, precision: 0) %>
+    </div>
+  <% end %>
+</div>
